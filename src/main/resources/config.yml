@@ -1,0 +1,15 @@
+messages:
+  prefix: "&6[&eSpectre&6]&7 "
+  no_permission: "You do not have permission to use this command."
+  player_only: "This command can only be used by players."
+  enabled: "Spectre has been enabled. Use /spectre mode <mode> to change visibility."
+  disabled: "Spectre has been disabled. You will now see all players."
+  modes:
+    vanish: "Spectre mode set to vanish. Players will disappear completely."
+    ghost: "Spectre mode set to ghost. Players will appear as transparent ghosts."
+    invisible: "Spectre mode set to invisible. Players will be invisible, but their armor may still be visible."
+    invalid-mode: "Invalid mode. Valid modes are vanish, ghost, and invisibility."
+  armor: "Armor visibility has been set to %s."
+
+
+range: 5

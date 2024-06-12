@@ -1,0 +1,14 @@
+name: Spectre
+main: com.github.dsadriel.spectre.Spectre
+version: 0.0.1
+api-version: 1.15
+description: A plugin that allows players to change the visibility of other players.
+author: dsadriel
+depend: [packetevents] 
+commands:
+  spectre:
+    description: Main command for the Spectre plugin.
+    usage: /spectre
+    permission: spectre.use
+    aliases: [sp]
+  
