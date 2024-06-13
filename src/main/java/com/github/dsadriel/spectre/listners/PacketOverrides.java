@@ -25,9 +25,11 @@ public class PacketOverrides implements PacketListener {
         Player dest = (Player) event.getPlayer();
         if(!spm.getPlayerOptions(dest).isEnabled()){
             return;
-        }
-
-        if(event.getPacketType() == PacketType.Play.Server.ENTITY_EQUIPMENT && spm.getPlayerOptions(dest).getArmorVisibility() != ArmorVisibility.VISIBLE){
+        }  
+        
+        // Cancel the equipment packet if the player is invisible to the destination player
+        if(event.getPacketType() == PacketType.Play.Server.ENTITY_EQUIPMENT
+            && spm.getPlayerOptions(dest).getArmorVisibility() != ArmorVisibility.VISIBLE){
             WrapperPlayServerEntityEquipment wrapped = new WrapperPlayServerEntityEquipment(event);
             if(spm.getNearbyMap(dest).containsKey(wrapped.getEntityId())){
                 event.setCancelled(true);
@@ -35,6 +37,7 @@ public class PacketOverrides implements PacketListener {
             }
         }
 
+        // Set the invisible flag in the metadata packet if the player is invisible to the destination player
         if(event.getPacketType() == PacketType.Play.Server.ENTITY_METADATA){
             WrapperPlayServerEntityMetadata wrapped = new WrapperPlayServerEntityMetadata(event);
             if(spm.getNearbyMap(dest).containsKey(wrapped.getEntityId())){

@@ -37,7 +37,7 @@ public class SpectreManager {
     public void disableSpectre(Player player) {
         PlayerOptions options = getPlayerOptions(player);
         SpectreApply.showAllPlayers(player);
-        setNearbyMap(player, null);
+        setNearbyMap(player, List.of());
         options.setEnabled(false);
         playerOptionsMap.put(player.getUniqueId(), options);
     }

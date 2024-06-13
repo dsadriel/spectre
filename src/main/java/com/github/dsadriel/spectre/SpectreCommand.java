@@ -27,11 +27,6 @@ public class SpectreCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission("spectre.use")) {
-            sendMessage(sender, "no_permission");
-            return true;
-        }
-
         if (!(sender instanceof Player)) {
             sendMessage(sender, "player_only");
             return true;
@@ -119,12 +114,12 @@ public class SpectreCommand implements CommandExecutor, TabCompleter {
                 return;
         }
         spectreManager.setArmorVisibility(player, visibility);
-        sendMessage(player, String.format(config.getString("messages.armor"), armor.toUpperCase()));
+        sendMessage(player, "armor", armor.toUpperCase());
     }
 
-    private void sendMessage(CommandSender sender, String messageKey) {
-        String message = ChatColor.translateAlternateColorCodes('&',
-                config.getString("messages.prefix") + config.getString("messages." + messageKey));
+    private void sendMessage(CommandSender sender, String messageKey, String... args) {
+        String message = ChatColor.translateAlternateColorCodes('&',    
+                config.getString("messages.prefix") + String.format(config.getString("messages." + messageKey), (Object[]) args));
         sender.sendMessage(message);
     }
 

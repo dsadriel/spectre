@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.potion.PotionEffectType;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
@@ -15,7 +16,6 @@ import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import com.github.retrooper.packetevents.protocol.item.type.ItemTypes;
 import com.github.retrooper.packetevents.protocol.player.Equipment;
 import com.github.retrooper.packetevents.protocol.player.EquipmentSlot;
-import com.github.retrooper.packetevents.protocol.potion.PotionTypes;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityEquipment;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityMetadata;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
@@ -31,14 +31,13 @@ public class SpectreApply {
     private static final SpectreManager spectreManager = Spectre.spectreManager;
     private static final ItemStack DEFAULT_BOOTS = ItemStack.builder().type(ItemTypes.LEATHER_BOOTS).amount(1).build();
     private static final ScoreBoardTeamInfo TEAM_INFO = new ScoreBoardTeamInfo(
-            Component.empty(), 
-            null, 
-            null, 
-            WrapperPlayServerTeams.NameTagVisibility.ALWAYS, 
-            WrapperPlayServerTeams.CollisionRule.NEVER, 
-            null, 
-            WrapperPlayServerTeams.OptionData.FRIENDLY_CAN_SEE_INVISIBLE
-    );
+            Component.empty(),
+            null,
+            null,
+            WrapperPlayServerTeams.NameTagVisibility.ALWAYS,
+            WrapperPlayServerTeams.CollisionRule.NEVER,
+            null,
+            WrapperPlayServerTeams.OptionData.FRIENDLY_CAN_SEE_INVISIBLE);
 
     public static void hidePlayers(Player player, List<Player> playersToHide) {
         playersToHide.remove(player);
@@ -68,11 +67,10 @@ public class SpectreApply {
         playersNames.add(player.getName());
 
         WrapperPlayServerTeams team = new WrapperPlayServerTeams(
-                "Spectre." + player.getName(), 
-                WrapperPlayServerTeams.TeamMode.CREATE, 
-                TEAM_INFO, 
-                playersNames
-        );
+                "Spectre." + player.getName(),
+                WrapperPlayServerTeams.TeamMode.CREATE,
+                TEAM_INFO,
+                playersNames);
 
         PacketEvents.getAPI().getPlayerManager().sendPacketSilently(player, team);
     }
@@ -80,9 +78,9 @@ public class SpectreApply {
     private static void hideArmor(Player player, List<Player> playersToHide, ArmorVisibility armorVisibility) {
         for (Player other : playersToHide) {
             List<EntityData> entityData = List.of(
-                    new EntityData(0, EntityDataTypes.BYTE, (byte) 0x20) 
-            );
-            WrapperPlayServerEntityMetadata metadata = new WrapperPlayServerEntityMetadata(other.getEntityId(), entityData);
+                    new EntityData(0, EntityDataTypes.BYTE, (byte) 0x20));
+            WrapperPlayServerEntityMetadata metadata = new WrapperPlayServerEntityMetadata(other.getEntityId(),
+                    entityData);
             PacketEvents.getAPI().getPlayerManager().sendPacketSilently(player, metadata);
 
             if (armorVisibility != ArmorVisibility.VISIBLE) {
@@ -93,10 +91,10 @@ public class SpectreApply {
                         new Equipment(EquipmentSlot.HELMET, null),
                         new Equipment(EquipmentSlot.CHEST_PLATE, null),
                         new Equipment(EquipmentSlot.LEGGINGS, null),
-                        new Equipment(EquipmentSlot.BOOTS, boots)
-                );
+                        new Equipment(EquipmentSlot.BOOTS, boots));
 
-                WrapperPlayServerEntityEquipment equipment = new WrapperPlayServerEntityEquipment(other.getEntityId(), equipmentList);
+                WrapperPlayServerEntityEquipment equipment = new WrapperPlayServerEntityEquipment(other.getEntityId(),
+                        equipmentList);
                 PacketEvents.getAPI().getPlayerManager().sendPacketSilently(player, equipment);
             }
         }
@@ -118,35 +116,35 @@ public class SpectreApply {
         List<Player> nearbyPlayers = Bukkit.getOnlinePlayers().stream()
                 .filter(p -> !p.equals(player))
                 .collect(Collectors.toList());
-                
+
         showPlayers(player, nearbyPlayers);
     }
 
     public static void showPlayers(Player player, List<Player> playersToShow) {
         playersToShow.remove(player);
 
+        
         SpectreMode mode = spectreManager.getPlayerOptions(player).getMode();
+        // If mode is VANISH, unvanish the players
         if (mode == SpectreMode.VANISH) {
             unvanishPlayers(player, playersToShow);
             return;
         }
 
+        // Remove the ghost team
         Collection<String> playersNames = playersToShow.stream().map(Player::getName).collect(Collectors.toList());
         WrapperPlayServerTeams team = new WrapperPlayServerTeams(
                 "Spectre." + player.getName(),
                 WrapperPlayServerTeams.TeamMode.ADD_ENTITIES,
                 TEAM_INFO,
-                playersNames
-        );
+                playersNames);
 
         PacketEvents.getAPI().getPlayerManager().sendPacketSilently(player, team);
         team.setTeamMode(WrapperPlayServerTeams.TeamMode.REMOVE_ENTITIES);
         PacketEvents.getAPI().getPlayerManager().sendPacketSilently(player, team);
 
-        ArmorVisibility armorVisibility = spectreManager.getPlayerOptions(player).getArmorVisibility();
-        if (armorVisibility != ArmorVisibility.HIDDEN || !spectreManager.getPlayerOptions(player).isEnabled()) {
-            showArmor(player, playersToShow);
-        }
+        revealPlayers(player, playersToShow);
+        
     }
 
     private static void unvanishPlayers(Player player, List<Player> playersToShow) {
@@ -155,25 +153,33 @@ public class SpectreApply {
         }
     }
 
-    private static void showArmor(Player player, List<Player> playersToShow) {
+    private static void revealPlayers(Player player, List<Player> playersToShow) {
         for (Player other : playersToShow) {
+            // Send metadata to show player to remove the invisible flag
             List<EntityData> entityData = List.of(
-                    new EntityData(0, EntityDataTypes.BYTE, getPlayerMetaData(player)) 
-            );
-            WrapperPlayServerEntityMetadata metadata = new WrapperPlayServerEntityMetadata(other.getEntityId(), entityData);
+                    new EntityData(0, EntityDataTypes.BYTE, getPlayerMetaData(player)));
+            WrapperPlayServerEntityMetadata metadata = new WrapperPlayServerEntityMetadata(other.getEntityId(),
+                    entityData);
             PacketEvents.getAPI().getPlayerManager().sendPacketSilently(player, metadata);
 
+            // Send equipment to show player
             EntityEquipment otherEquip = other.getEquipment();
             List<Equipment> equipmentList = List.of(
-                    new Equipment(EquipmentSlot.MAIN_HAND, SpigotReflectionUtil.decodeBukkitItemStack(otherEquip.getItemInMainHand())),
-                    new Equipment(EquipmentSlot.OFF_HAND, SpigotReflectionUtil.decodeBukkitItemStack(otherEquip.getItemInOffHand())),
-                    new Equipment(EquipmentSlot.HELMET, SpigotReflectionUtil.decodeBukkitItemStack(otherEquip.getHelmet())),
-                    new Equipment(EquipmentSlot.CHEST_PLATE, SpigotReflectionUtil.decodeBukkitItemStack(otherEquip.getChestplate())),
-                    new Equipment(EquipmentSlot.LEGGINGS, SpigotReflectionUtil.decodeBukkitItemStack(otherEquip.getLeggings())),
-                    new Equipment(EquipmentSlot.BOOTS, SpigotReflectionUtil.decodeBukkitItemStack(otherEquip.getBoots()))
-            );
+                    new Equipment(EquipmentSlot.MAIN_HAND,
+                            SpigotReflectionUtil.decodeBukkitItemStack(otherEquip.getItemInMainHand())),
+                    new Equipment(EquipmentSlot.OFF_HAND,
+                            SpigotReflectionUtil.decodeBukkitItemStack(otherEquip.getItemInOffHand())),
+                    new Equipment(EquipmentSlot.HELMET,
+                            SpigotReflectionUtil.decodeBukkitItemStack(otherEquip.getHelmet())),
+                    new Equipment(EquipmentSlot.CHEST_PLATE,
+                            SpigotReflectionUtil.decodeBukkitItemStack(otherEquip.getChestplate())),
+                    new Equipment(EquipmentSlot.LEGGINGS,
+                            SpigotReflectionUtil.decodeBukkitItemStack(otherEquip.getLeggings())),
+                    new Equipment(EquipmentSlot.BOOTS,
+                            SpigotReflectionUtil.decodeBukkitItemStack(otherEquip.getBoots())));
 
-            WrapperPlayServerEntityEquipment equipment = new WrapperPlayServerEntityEquipment(other.getEntityId(), equipmentList);
+            WrapperPlayServerEntityEquipment equipment = new WrapperPlayServerEntityEquipment(other.getEntityId(),
+                    equipmentList);
             PacketEvents.getAPI().getPlayerManager().sendPacketSilently(player, equipment);
         }
     }
@@ -195,10 +201,10 @@ public class SpectreApply {
         if (player.isGlowing()) {
             metadata |= 0x40;
         }
-        if (player.getActivePotionEffects().stream().anyMatch(e -> e.getType() == PotionTypes.INVISIBILITY)) {
+        if (player.getActivePotionEffects().stream().anyMatch(e -> e.getType() == PotionEffectType.INVISIBILITY)) {
             metadata |= 0x20;
         }
-        if (player.getActivePotionEffects().stream().anyMatch(e -> e.getType() == PotionTypes.GLOWING)) {
+        if (player.getActivePotionEffects().stream().anyMatch(e -> e.getType() == PotionEffectType.GLOWING)) {
             metadata |= 0x40;
         }
         if (player.isGliding()) {
