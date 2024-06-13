@@ -1,6 +1,6 @@
 <center>
   
-![Spectre](https://cdn.modrinth.com/data/cached_images/4dc5082182a8404938999941095d5e4f75602e23.png)
+![Spectre](/.github/logo.png)
 
 </center>
 
