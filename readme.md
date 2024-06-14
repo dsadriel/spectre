@@ -6,24 +6,48 @@
 
 ----
 
-> Spectre is a Minecraft plugin that allows the player to control the visibility of nearby players.
+## Spectre is a Minecraft plugin that allows the player to control the visibility of nearby players.
+
+Supports Paper 1.20.6
+
 
 > [!CAUTION]
 > This plugin is still in development and may contain bugs. Use at your own risk. The performance impact of this plugin when used with a large number of players is still unknown.
-
-## Features
-- User can toggle the visibility of nearby players
-- Three visibility modes: Vanish, Ghost, Invisible
-- Three armor visibility modes: Visible, Hidden, Boots
-- Customizable visibility distance
-- Permissions support
 
 > [!IMPORTANT]
 > This plugin is dependent on [PacketEvents v2.3](https://github.com/retrooper/packetevents/releases/tag/v2.3.0) to intercept packets and modify the player's visibility.
 
 
-## Commands
+## Features
+- User can toggle the visibility of nearby players
+- Three visibility modes: Vanish, Ghost, Invisible
+- Three armor visibility modes: Visible, Hidden, Boots
+- Permissions support
+- Customizable messages
 
+### Demo
+<details>
+
+> Visibility mode: **Ghost**, Armor: **Boots**
+
+![](/.github/1.webp)
+
+> Visibility mode: **Ghost**, Armor: **Visible**
+
+![](/.github/2.webp)
+
+> Visibility mode: **Ghost**, Armor: **Hidden**
+
+![](/.github/3.webp)
+
+> Visibility mode: **Invisible**, Armor: **Boots**
+
+![](/.github/4.webp)
+
+</details>
+
+
+## Commands
 
 | Command | Description | Permission |
 | --- | --- | --- |

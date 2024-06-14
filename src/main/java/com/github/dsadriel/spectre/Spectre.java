@@ -40,9 +40,7 @@ public class Spectre extends JavaPlugin {
         // Register the packet listener
         getServer().getPluginManager().registerEvents(new PlayerMovement(), this);
 
-        getLogger().info("Spectre has been enabled");
-
-        
+        getLogger().info("Spectre v." + getDescription().getVersion() + " has been enabled");
     }
 
     @Override
