@@ -8,6 +8,9 @@
 
 > Spectre is a Minecraft plugin that allows the player to control the visibility of nearby players.
 
+> [!CAUTION]
+> This plugin is still in development and may contain bugs. Use at your own risk. The performance impact of this plugin when used with a large number of players is still unknown.
+
 ## Features
 - User can toggle the visibility of nearby players
 - Three visibility modes: Vanish, Ghost, Invisible
@@ -15,22 +18,40 @@
 - Customizable visibility distance
 - Permissions support
 
-## Requirements
-This plugin is dependent on [PacketEvents](https://github.com/retrooper/packetevents) v2.3 to intercept packets and modify the player's visibility.
+> [!IMPORTANT]
+> This plugin is dependent on [PacketEvents v2.3](https://github.com/retrooper/packetevents/releases/tag/v2.3.0) to intercept packets and modify the player's visibility.
 
 
 ## Commands
-> WARNING: Permissions are not yet implemented, all commands are available to all players.
+
 
 | Command | Description | Permission |
 | --- | --- | --- |
-| `/spectre help` | Display the help message | `spectre.help` |
-| `/spectre reload` | Reload the configuration | `spectre.reload` |
+| `/spectre [help]` | Display the help message | `spectre.use` |
 | `/spectre <enable\|disable>` | Toggle the visibility of nearby players | `spectre.toggle` |
 | `/spectre mode <vanish\|ghost\|invisible>` | Change the visibility mode | `spectre.mode.<vanish\|ghost\|invisible>` |
 | `/spectre armor <visible\|hidden\|boots>` | Change the visibility of armor | `spectre.armor.<visible\|hidden\|boots>` |
-| `/spectre distance <distance>` | Change the visibility distance | `spectre.set_distance` |
+
+## Permissions
+
+| Permission | Description |
+| --- | --- |
+| `spectre.use` | Allows the player to use spectre command |
+| `spectre.toggle` | Allows the player to toggle the visibility of nearby players |
+| `spectre.mode.<vanish\|ghost\|invisible>` | Allows the player to change the visibility mode |
+| `spectre.armor.<visible\|hidden\|boots>` | Allows the player to change the visibility of armor |
+| `spectre.bypass` | Allows the player to bypass the visibility restrictions |
+| `spectre.config` | Allows the player to reload the configuration and change settings |
 
 ## Configuration
 
-All messages can be customized in the `config.yml` file. On the BOOTS mode players with no boots will be rendered with boots specified in the configuration.
+All messages can be customized in the `config.yml` file. 
+
+-----
+
+## Backlog
+
+- [ ] Implement visibility distance
+- [ ] Add command to reload the configuration
+- [ ] Add command to change the default boots
+- [ ] Add admin command to change the visibility of other players

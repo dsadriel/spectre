@@ -18,6 +18,14 @@ public class PlayerMovement implements Listener {
     private final double range = Spectre.getInstance().getConfig().getInt("range", 5);
     private final SpectreManager spectreManager = Spectre.spectreManager;
 
+    /**
+     * This method is called when a player moves.
+     * It checks if the player is enabled and if they are near other players.
+     * If the player is enabled and near other players, it shows the players that are no longer nearby
+     * and hides the players that are now nearby.
+     *
+     * @param event The PlayerMoveEvent containing information about the player movement.
+     */
     @EventHandler
     public void onPlayerMovement(PlayerMoveEvent event) {
         Player player = event.getPlayer();
@@ -27,7 +35,7 @@ public class PlayerMovement implements Listener {
 
         // Get the nearby players
         List<Player> nearbyPlayers = player.getNearbyEntities(range, range, range).stream()
-                .filter(entity -> entity instanceof Player)
+                .filter(entity -> entity instanceof Player && !entity.hasPermission("spectre.bypass"))
                 .map(entity -> (Player) entity)
                 .collect(Collectors.toList());
 

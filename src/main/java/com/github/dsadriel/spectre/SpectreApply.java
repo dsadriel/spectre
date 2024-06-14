@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
@@ -26,10 +27,15 @@ import com.github.dsadriel.spectre.enums.SpectreMode;
 import io.github.retrooper.packetevents.util.SpigotReflectionUtil;
 import net.kyori.adventure.text.Component;
 
+/**
+ * The SpectreApply class provides methods for hiding and revealing players using the Spectre plugin.
+ * It contains methods for hiding players, vanishing players, ghosting players, hiding armor, and showing players.
+ * The class also includes utility methods for retrieving player metadata and boots.
+ */
 public class SpectreApply {
 
     private static final SpectreManager spectreManager = Spectre.spectreManager;
-    private static final ItemStack DEFAULT_BOOTS = ItemStack.builder().type(ItemTypes.LEATHER_BOOTS).amount(1).build();
+    private static final ItemStack DEFAULT_BOOTS = ItemStack.builder().type(ItemTypes.CHAINMAIL_BOOTS).amount(1).build();
     private static final ScoreBoardTeamInfo TEAM_INFO = new ScoreBoardTeamInfo(
             Component.empty(),
             null,
@@ -39,6 +45,13 @@ public class SpectreApply {
             null,
             WrapperPlayServerTeams.OptionData.FRIENDLY_CAN_SEE_INVISIBLE);
 
+    /**
+     * This method hides the specified players from the player.
+     * The method checks the player's Spectre mode and armor visibility settings and hides the players accordingly.
+     * 
+     * @param player the player to hide the players from
+     * @param playersToHide the list of players to hide
+     */
     public static void hidePlayers(Player player, List<Player> playersToHide) {
         playersToHide.remove(player);
         if (playersToHide.isEmpty()) {
@@ -56,12 +69,26 @@ public class SpectreApply {
         hideArmor(player, playersToHide, armorVisibility);
     }
 
+    /**
+     * This method vanishes the specified players from the player.
+     * The method hides the players from the player using the hidePlayer method.
+     * 
+     * @param player the player to vanish the players from
+     * @param playersToHide the list of players to vanish
+     */
     private static void vanishPlayers(Player player, List<Player> playersToHide) {
         for (Player other : playersToHide) {
             player.hidePlayer(Spectre.getInstance(), other);
         }
     }
 
+    /**
+     * This method ghosts the specified players from the player.
+     * The method creates a ghost team for the player and the players to hide.
+     * 
+     * @param player the player to ghost the players from
+     * @param playersToHide the list of players to ghost
+     */
     private static void ghostPlayers(Player player, List<Player> playersToHide) {
         Collection<String> playersNames = playersToHide.stream().map(Player::getName).collect(Collectors.toList());
         playersNames.add(player.getName());
@@ -75,6 +102,15 @@ public class SpectreApply {
         PacketEvents.getAPI().getPlayerManager().sendPacketSilently(player, team);
     }
 
+
+    /**
+     * This method hides the armor of the specified players from the player.
+     * The method checks the armor visibility setting and hides the armor of the players accordingly.
+     * 
+     * @param player the player to hide the armor from
+     * @param playersToHide the list of players to hide the armor from
+     * @param armorVisibility the armor visibility setting
+     */
     private static void hideArmor(Player player, List<Player> playersToHide, ArmorVisibility armorVisibility) {
         for (Player other : playersToHide) {
             List<EntityData> entityData = List.of(
@@ -100,6 +136,13 @@ public class SpectreApply {
         }
     }
 
+    /**
+     * This method reveals the specified players to the player.
+     * The method checks the player's Spectre mode and armor visibility settings and reveals the players accordingly.
+     * 
+     * @param player the player to reveal the players to
+     * @param playersToShow the list of players to reveal
+     */
     private static ItemStack getBoots(Player player, ArmorVisibility armorVisibility) {
         if (armorVisibility == ArmorVisibility.HIDDEN) {
             return null;
@@ -112,6 +155,13 @@ public class SpectreApply {
         }
     }
 
+    /**
+     * This method reveals the specified players to the player.
+     * The method checks the player's Spectre mode and armor visibility settings and reveals the players accordingly.
+     * 
+     * @param player the player to reveal the players to
+     * @param playersToShow the list of players to reveal
+     */
     public static void showAllPlayers(Player player) {
         List<Player> nearbyPlayers = Bukkit.getOnlinePlayers().stream()
                 .filter(p -> !p.equals(player))
@@ -120,9 +170,22 @@ public class SpectreApply {
         showPlayers(player, nearbyPlayers);
     }
 
-    public static void showPlayers(Player player, List<Player> playersToShow) {
+    /**
+     * This method reveals the specified players to the player.
+     * The method checks the player's Spectre mode and armor visibility settings and reveals the players accordingly.
+     * 
+     * @param player the player to reveal the players to
+     * @param playersToShow the list of players to reveal
+     */
+    public static void showPlayers(Player player, @Nullable List<Player> playersToShow) {
+        if(playersToShow == null){
+            playersToShow = Spectre.spectreManager.getNearbyMap(player).values().stream()
+                    .map(Bukkit::getPlayer)
+                    .filter(java.util.Objects::nonNull)
+                    .collect(Collectors.toList());
+        }
         playersToShow.remove(player);
-
+        
         
         SpectreMode mode = spectreManager.getPlayerOptions(player).getMode();
         // If mode is VANISH, unvanish the players
@@ -147,12 +210,26 @@ public class SpectreApply {
         
     }
 
+    /**
+     * This method reveals the specified players to the player.
+     * The method checks the player's Spectre mode and armor visibility settings and reveals the players accordingly.
+     * 
+     * @param player the player to reveal the players to
+     * @param playersToShow the list of players to reveal
+     */
     private static void unvanishPlayers(Player player, List<Player> playersToShow) {
         for (Player other : playersToShow) {
             player.showPlayer(Spectre.getInstance(), other);
         }
     }
 
+    /**
+     * This method reveals the specified players to the player.
+     * The method checks the player's Spectre mode and armor visibility settings and reveals the players accordingly.
+     * 
+     * @param player the player to reveal the players to
+     * @param playersToShow the list of players to reveal
+     */
     private static void revealPlayers(Player player, List<Player> playersToShow) {
         for (Player other : playersToShow) {
             // Send metadata to show player to remove the invisible flag
@@ -184,6 +261,13 @@ public class SpectreApply {
         }
     }
 
+    /**
+     * This method retrieves the metadata for a player.
+     * The metadata includes information about the player's status, such as fire ticks, sneaking, sprinting, swimming, glowing, invisibility, and gliding.
+     * 
+     * @param player the player to retrieve the metadata for
+     * @return the metadata byte for the player
+     */
     private static byte getPlayerMetaData(Player player) {
         byte metadata = 0x00;
         if (player.getFireTicks() > 0) {

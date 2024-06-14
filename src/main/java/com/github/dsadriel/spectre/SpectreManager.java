@@ -6,10 +6,16 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 import com.github.dsadriel.spectre.enums.ArmorVisibility;
 import com.github.dsadriel.spectre.enums.SpectreMode;
 
+/**
+ * The `SpectreManager` class manages the Spectre mode functionality for players.
+ * It provides methods to enable/disable Spectre mode, set Spectre mode and armor visibility,
+ * and retrieve player options and nearby player maps.
+ */
 public class SpectreManager {
 
     private final Map<UUID, PlayerOptions> playerOptionsMap = new HashMap<>();
@@ -25,8 +31,11 @@ public class SpectreManager {
      */
     public void enableSpectre(Player player) {
         PlayerOptions options = getPlayerOptions(player);
+        if(options.isEnabled())
+            return;
         options.setEnabled(true);
         playerOptionsMap.put(player.getUniqueId(), options);
+        simulatePlayerMovement(player, true, false);
     }
 
     /**
@@ -36,10 +45,13 @@ public class SpectreManager {
      */
     public void disableSpectre(Player player) {
         PlayerOptions options = getPlayerOptions(player);
+        if(!options.isEnabled())
+            return;
         SpectreApply.showAllPlayers(player);
         setNearbyMap(player, List.of());
         options.setEnabled(false);
         playerOptionsMap.put(player.getUniqueId(), options);
+        
     }
 
     /**
@@ -50,7 +62,14 @@ public class SpectreManager {
      */
     public void setMode(Player player, SpectreMode mode) {
         PlayerOptions options = getPlayerOptions(player);
+        if(options.getMode() == mode)
+            return;
+        // Show all players if the player is switching from vanish mode to prevent ghosting
+        if(options.getMode() == SpectreMode.VANISH && mode != SpectreMode.VANISH) {
+            SpectreApply.showAllPlayers(player);
+        }
         options.setMode(mode);
+        simulatePlayerMovement(player, true, true);
     }
 
     /**
@@ -61,7 +80,10 @@ public class SpectreManager {
      */
     public void setArmorVisibility(Player player, ArmorVisibility visibility) {
         PlayerOptions options = getPlayerOptions(player);
+        if(options.getArmorVisibility() == visibility)
+            return;
         options.setArmorVisibility(visibility);
+        simulatePlayerMovement(player, true, true);
     }
 
     public void load() {
@@ -79,7 +101,7 @@ public class SpectreManager {
      * @return the player options
      */
     public PlayerOptions getPlayerOptions(Player player) {
-        return playerOptionsMap.getOrDefault(player.getUniqueId(), new PlayerOptions(false, SpectreMode.INVISIBLE, ArmorVisibility.VISIBLE));
+        return playerOptionsMap.getOrDefault(player.getUniqueId(), new PlayerOptions(false, SpectreMode.GHOST, ArmorVisibility.BOOTS));
     }
 
     /**
@@ -106,5 +128,16 @@ public class SpectreManager {
             }
         }
         nearbyPlayersMap.put(player.getUniqueId(), nearbyPlayers);
+    }
+
+    public void simulatePlayerMovement(Player player, Boolean updateNearbyPlayers, Boolean showNearbyFirst) {
+        if(showNearbyFirst) {
+            SpectreApply.showPlayers(player, null);
+        }
+        if(updateNearbyPlayers) {
+            setNearbyMap(player, List.of());
+        }
+        PlayerMoveEvent e = new PlayerMoveEvent(player, player.getLocation(), player.getLocation());
+        Spectre.getInstance().getServer().getPluginManager().callEvent(e);
     }
 }

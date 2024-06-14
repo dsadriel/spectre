@@ -28,12 +28,11 @@ public class Spectre extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        
 
         // Register the command
         getCommand("spectre").setExecutor(new SpectreCommand());
 
-        
+
         // Initialize the PacketEvents
         PacketEvents.getAPI().init();
         PacketEvents.getAPI().getEventManager().registerListener(new PacketOverrides(), PacketListenerPriority.HIGH);
@@ -41,8 +40,9 @@ public class Spectre extends JavaPlugin {
         // Register the packet listener
         getServer().getPluginManager().registerEvents(new PlayerMovement(), this);
 
-
         getLogger().info("Spectre has been enabled");
+
+        
     }
 
     @Override
@@ -56,10 +56,18 @@ public class Spectre extends JavaPlugin {
         return getPlugin(Spectre.class);
     }
 
-
-    public static void sendPlayerMessage(Player player, String message) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', getInstance().getConfig().getString("messages.prefix") + message));
+    public static void sendMessage(Player destination, String message, Boolean usePrefix) {
+        destination.sendMessage(
+                ChatColor.translateAlternateColorCodes('&',
+                        (usePrefix ? getInstance().getConfig().getString("messages.prefix") : "")
+                                + message));
     }
 
+    public static  void sendMessageKey(Player destination, String key, Boolean usePrefix,  String... args) {
+        destination.sendMessage(
+                ChatColor.translateAlternateColorCodes('&',
+                        (usePrefix ? getInstance().getConfig().getString("messages.prefix") : "")
+                                + String.format(getInstance().getConfig().getString("messages." + key), (Object[]) args)));
+    }
 
 }

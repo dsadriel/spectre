@@ -1,8 +1,8 @@
 name: Spectre
 main: com.github.dsadriel.spectre.Spectre
-version: 0.0.1
-api-version: 1.15
-description: A plugin that allows players to change the visibility of other players.
+version: ${project.version}
+description: Spectre is a Minecraft plugin that allows the player to control the visibility of nearby players.
+website: https://github.com/dsadriel/spectre
 author: dsadriel
 depend: [packetevents] 
 commands:
@@ -10,5 +10,23 @@ commands:
     description: Main command for the Spectre plugin.
     usage: /spectre
     permission: spectre.use
-    aliases: [sp]
-  
+    aliases: [sp, spec]
+permissions:
+  spectre.toggle:
+    description: Allows the player to toggle the visibility of nearby players
+  spectre.mode.vanish:
+    description: Allows the player to change the visibility mode to vanish
+  spectre.mode.ghost:
+    description: Allows the player to change the visibility mode to ghost
+  spectre.mode.invisible:
+    description: Allows the player to change the visibility mode to invisible
+  spectre.armor.visible:
+    description: Allows the player to change the visibility of armor to visible
+  spectre.armor.hidden:
+    description: Allows the player to change the visibility of armor to hidden
+  spectre.armor.boots:
+    description: Allows the player to change the visibility of boots
+  spectre.bypass:
+    description: Allows the player to bypass the visibility restrictions
+  spectre.config:
+    description: Allows the player to reload the configuration and change settings
