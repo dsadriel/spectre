@@ -32,6 +32,8 @@ public class Spectre extends JavaPlugin {
         // Register the command
         getCommand("spectre").setExecutor(new SpectreCommand());
 
+        // Check for updates
+        SpectreUpdateCheck.checkForUpdates();
 
         // Initialize the PacketEvents
         PacketEvents.getAPI().init();
@@ -40,6 +42,7 @@ public class Spectre extends JavaPlugin {
         // Register the packet listener
         getServer().getPluginManager().registerEvents(new PlayerMovement(), this);
 
+        // Print the plugin enabled message
         getLogger().info("Spectre v." + getDescription().getVersion() + " has been enabled");
     }
 
