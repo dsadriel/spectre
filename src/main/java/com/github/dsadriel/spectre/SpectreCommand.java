@@ -93,6 +93,9 @@ public class SpectreCommand implements CommandExecutor, TabCompleter {
                     Spectre.sendMessageKeyList(player, "help-admin", false);
                 }
                 return true;
+            case "set-radius":
+                handleRadius(player, args);
+                return true;
             case "info":
                 Spectre.sendMessage(player, spectreManager.getPlayerOptions(player).toString());
                 return true;
@@ -179,15 +182,44 @@ public class SpectreCommand implements CommandExecutor, TabCompleter {
     }
 
     /**
+     * Handles the set-radius command.
+     * 
+     * @param player
+     * @param args
+     */
+    private void handleRadius(Player player, String[] args) {
+        if (!player.hasPermission("spectre.set-radius")) {
+            Spectre.sendMessageKey(player, "no_permission");
+            return;
+        }
+        if (args.length < 2) {
+            Spectre.sendMessageKey(player, "usage", "set-radius <radius>");
+            return;
+        }
+        try {
+            double radius = Double.parseDouble(args[1]);
+            if (!spectreManager.getPlayerOptions(player).setRadius(radius)) {
+                Spectre.sendMessageKey(player, "set-radius.invalid", true,
+                        String.valueOf(config.getDouble("max-hiding-radius")));
+                return;
+            }
+            Spectre.sendMessageKey(player, "set-radius.success", true, String.valueOf(radius));
+        } catch (NumberFormatException e) {
+            Spectre.sendMessageKey(player, "set-radius.invalid", true,
+                    String.valueOf(config.getDouble("max-hiding-radius")));
+        }
+    }
+
+    /**
      * Tab completion for the Spectre command.
      */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> completions = Arrays.asList();
         if (args.length == 1) {
-            completions = Arrays.asList("help", "enable", "disable", "mode", "armor", "version");
+            completions = Arrays.asList("help", "enable", "disable", "mode", "armor", "version", "set-radius");
             if (sender.hasPermission("spectre.admin")) {
-                completions = Arrays.asList("help", "enable", "disable", "mode", "armor", "version", "check-updates");
+                completions = Arrays.asList("help", "enable", "disable", "mode", "armor", "version", "set-radius", "check-updates");
             }
         }
         if (args.length == 2) {

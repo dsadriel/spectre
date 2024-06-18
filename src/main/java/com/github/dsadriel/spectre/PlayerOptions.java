@@ -45,6 +45,13 @@ public class PlayerOptions {
     public Double getRadius() {
         return radius;
     }
+    
+    public Boolean setRadius(Double _radius) {
+        if(_radius < 0 || _radius > Spectre.getInstance().getConfig().getDouble("max-hiding-radius"))    
+            return false;
+        this.radius = _radius;
+        return true;
+    }
 
     @Override
     public String toString() {

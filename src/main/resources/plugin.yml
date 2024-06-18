@@ -30,6 +30,8 @@ permissions:
     description: Allows the player to change the visibility of armor to hidden
   spectre.armor.boots:
     description: Allows the player to change the visibility of boots
+  spectre.set-radius:
+    description: Allows the player to set the radius for players to be hidden
   spectre.bypass:
     description: Allows the player to bypass the visibility restrictions
   spectre.admin:

@@ -31,6 +31,11 @@ messages:
     outdated: "Spectre is outdated. The latest version is %s."
     # Message sent when an error occurs while checking for updates
     error: "An error occurred while checking for updates. Please try again later."
+  set-radius: 
+    # Message sent when a player sets the hiding radius
+    success: "Hiding radius set to %s blocks."
+    # Message sent when a player tries to set the hiding radius to an invalid value
+    invalid: "Invalid radius. Please enter a number between 1 and %s."
   help:
     - "&6Spectre Commands:"
     - "&e/spectre &7- Main command for the Spectre plugin."
@@ -56,7 +61,10 @@ defaults:
   mode: ghost
   # Default armor visibility setting for players who join the server
   armor: boots
-  # Radius in blocks for players to be visible in vanish mode
-  vanish-radius: 5
+  # Radius in blocks for players to be hidden
+  hiding-radius: 5
   # Default boots type for players who are not wearing any armor
   boots-material: GOLDEN_BOOTS
+
+# The maximum radius in blocks for the hidden-radius setting
+max-hiding-radius: 10

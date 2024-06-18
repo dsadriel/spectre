@@ -125,14 +125,6 @@ public class SpectreManager {
         simulatePlayerMovement(player, true, true);
     }
 
-    public void load() {
-        // Load player options from persistent storage
-    }
-
-    public void save() {
-        // Save player options to persistent storage
-    }
-
     /**
      * Gets the player options for a player.
      * 
@@ -140,8 +132,12 @@ public class SpectreManager {
      * @return the player options
      */
     public PlayerOptions getPlayerOptions(Player player) {
-        return playerOptionsMap.getOrDefault(player.getUniqueId(),
-        new PlayerOptions(false, defaultMode, defaultArmorVisibility, defaultRadius));
+        PlayerOptions options = playerOptionsMap.get(player.getUniqueId());
+        if(options != null)
+            return options;
+        options = new PlayerOptions(false, defaultMode, defaultArmorVisibility, defaultRadius);
+        playerOptionsMap.put(player.getUniqueId(), options);
+        return options;
     }
 
     /**
