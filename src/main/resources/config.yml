@@ -1,10 +1,11 @@
-# Spectre configuration file
-# This file is used to configure the plugin's settings.
-
+#####################################################################
+#                   Spectre configuration file                      #
+#        This file is used to configure the plugin's settings.      #
+#####################################################################
 
 # Messages
 messages:
-  # Prefix for all messages sent by Spectre
+  # Prefix for all messages sent by Spectre, set to "" to disable
   prefix: "&6[&eSpectre&6]&7 "
   # Message sent when a player does not have permission to use a command
   no_permission: "You do not have permission to use this command." 
@@ -19,5 +20,34 @@ messages:
     vanish: "Spectre mode set to vanish. Players will disappear completely." 
     ghost: "Spectre mode set to ghost. Players will appear as transparent ghosts." #
     invisible: "Spectre mode set to invisible. Players will be invisible, but their armor may still be visible."
-  # Message sent when a player toggles armor visibility
+  # Message sent when a player toggles armor visibility. The %s will be replaced with the new visibility setting
   armor: "Armor visibility has been set to %s."
+  usage: "Usage: %s"
+  reload: "Configuration file reloaded."
+  version-check:
+    # Message sent when the plugin is up to date
+    up-to-date: "Spectre is up to date. Current version: %s."
+    # Message sent when the plugin is outdated
+    outdated: "Spectre is outdated. The latest version is %s."
+    # Message sent when an error occurs while checking for updates
+    error: "An error occurred while checking for updates. Please try again later."
+  help:
+    - "&6Spectre Commands:"
+    - "&e/spectre &7- Main command for the Spectre plugin."
+    - "&e/spectre help &7- Display this help message."
+    - "&e/spectre mode <mode> &7- Change visibility mode (vanish, ghost, invisible)."
+    - "&e/spectre armor <visible|hidden> &7- Change armor visibility."
+    - "&e/spectre version &7- Display the plugin version."
+  help-admin:
+    - "&e/spectre reload &7- Reload the configuration file."
+    - "&e/spectre check-updates &7- Check for updates."
+
+
+# Settings
+
+# Whether or not to enable bStats metrics
+## What is bStats? https://bstats.org/
+enable-bStats: true
+
+# Whether or not to check for updates on startup
+check-for-updates: true

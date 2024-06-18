@@ -28,20 +28,33 @@ public class Spectre extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        getConfig().options().copyDefaults(true);
+        saveConfig();
 
         // Register the command
         getCommand("spectre").setExecutor(new SpectreCommand());
 
-        // Check for updates
-        SpectreUpdateCheck.checkForUpdates();
-
+        
+        // Register the packet listener
+        getServer().getPluginManager().registerEvents(new PlayerMovement(), this);
+        
         // Initialize the PacketEvents
+        PacketEvents.getAPI().getSettings()
+            .bStats(false)
+            .checkForUpdates(true);
         PacketEvents.getAPI().init();
         PacketEvents.getAPI().getEventManager().registerListener(new PacketOverrides(), PacketListenerPriority.HIGH);
 
-        // Register the packet listener
-        getServer().getPluginManager().registerEvents(new PlayerMovement(), this);
+        // Initialize the metrics for bStats
+        if(getConfig().getBoolean("enable-bStats")){
+            new Metrics(this, 22290);
+        }
 
+        // Check for updates
+        if(getConfig().getBoolean("check-for-updates")){
+            SpectreUpdateCheck.checkForUpdates();
+        }
+        
         // Print the plugin enabled message
         getLogger().info("Spectre v." + getDescription().getVersion() + " has been enabled");
     }
@@ -57,11 +70,17 @@ public class Spectre extends JavaPlugin {
         return getPlugin(Spectre.class);
     }
 
+
+
     public static void sendMessage(Player destination, String message, Boolean usePrefix) {
         destination.sendMessage(
                 ChatColor.translateAlternateColorCodes('&',
                         (usePrefix ? getInstance().getConfig().getString("messages.prefix") : "")
                                 + message));
+    }
+
+    public static void sendMessage(Player destination, String message) {
+        sendMessage(destination, message, true);
     }
 
     public static  void sendMessageKey(Player destination, String key, Boolean usePrefix,  String... args) {
@@ -71,4 +90,17 @@ public class Spectre extends JavaPlugin {
                                 + String.format(getInstance().getConfig().getString("messages." + key), (Object[]) args)));
     }
 
+    public static  void sendMessageKeyList(Player destination, String key, Boolean usePrefix,  String... args) {
+        String message = String.join("\n", getInstance().getConfig().getStringList("messages." + key));
+        destination.sendMessage(
+                ChatColor.translateAlternateColorCodes('&',
+                        (usePrefix ? getInstance().getConfig().getString("messages.prefix") : "")
+                                + String.format(message, (Object[]) args)));
+    }
+
+
+    public static void sendMessageKey(Player destination, String key, String... args) {
+        sendMessageKey(destination, key, true, args);
+    }
+    
 }
