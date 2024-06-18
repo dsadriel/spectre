@@ -52,9 +52,12 @@ Supports Paper 1.20.6
 | Command | Description | Permission |
 | --- | --- | --- |
 | `/spectre [help]` | Display the help message | `spectre.use` |
+| `/spectre version` | Display the plugin version | `spectre.use` |
 | `/spectre <enable\|disable>` | Toggle the visibility of nearby players | `spectre.toggle` |
 | `/spectre mode <vanish\|ghost\|invisible>` | Change the visibility mode | `spectre.mode.<vanish\|ghost\|invisible>` |
 | `/spectre armor <visible\|hidden\|boots>` | Change the visibility of armor | `spectre.armor.<visible\|hidden\|boots>` |
+| `/spectre check-updates` | Check for updates | `spectre.admin` |
+
 
 ## Permissions
 
@@ -65,7 +68,7 @@ Supports Paper 1.20.6
 | `spectre.mode.<vanish\|ghost\|invisible>` | Allows the player to change the visibility mode |
 | `spectre.armor.<visible\|hidden\|boots>` | Allows the player to change the visibility of armor |
 | `spectre.bypass` | Allows the player to bypass the visibility restrictions |
-| `spectre.config` | Allows the player to reload the configuration and change settings |
+| `spectre.admin` | Allows the to use admin commands |
 
 ## Configuration
 
