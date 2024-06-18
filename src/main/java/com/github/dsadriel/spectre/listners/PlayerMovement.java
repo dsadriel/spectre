@@ -15,8 +15,7 @@ import java.util.stream.Collectors;
 
 public class PlayerMovement implements Listener {
 
-    private final double range = Spectre.getInstance().getConfig().getInt("range", 5);
-    private final SpectreManager spectreManager = Spectre.spectreManager;
+    private final SpectreManager spectreManager = Spectre.getInstance().getSpectreManager();
 
     /**
      * This method is called when a player moves.
@@ -34,7 +33,8 @@ public class PlayerMovement implements Listener {
         }
 
         // Get the nearby players
-        List<Player> nearbyPlayers = player.getNearbyEntities(range, range, range).stream()
+        double radius = spectreManager.getPlayerOptions(player).getRadius();
+        List<Player> nearbyPlayers = player.getNearbyEntities(radius, radius, radius).stream()
                 .filter(entity -> entity instanceof Player && !entity.hasPermission("spectre.bypass"))
                 .map(entity -> (Player) entity)
                 .collect(Collectors.toList());

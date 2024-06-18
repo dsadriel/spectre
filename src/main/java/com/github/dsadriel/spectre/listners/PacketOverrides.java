@@ -19,7 +19,7 @@ import com.github.dsadriel.spectre.enums.ArmorVisibility;
  */
 public class PacketOverrides implements PacketListener {
 
-    private final SpectreManager spm = Spectre.spectreManager;
+    private final SpectreManager spm = Spectre.getInstance().getSpectreManager();
 
     /**
      * This method is called when a packet is being sent to a player.

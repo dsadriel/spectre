@@ -12,7 +12,7 @@ import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 
 public class Spectre extends JavaPlugin {
-    public static SpectreManager spectreManager = new SpectreManager();
+    private SpectreManager spectreManager;
 
     @Override
     public void onLoad() {
@@ -30,11 +30,19 @@ public class Spectre extends JavaPlugin {
         saveDefaultConfig();
         getConfig().options().copyDefaults(true);
         saveConfig();
+        
+        // Initialize the SpectreManager
+        spectreManager = new SpectreManager(this);
+        
+        // Set the default boots
+        if(!SpectreApply.setBootsMaterial(getConfig().getString("defaults.boots-material"))){
+            getLogger().warning("Invalid default boots material: " + getConfig().getString("defaults.boots-material"));
+        }
+
 
         // Register the command
-        getCommand("spectre").setExecutor(new SpectreCommand());
+        getCommand("spectre").setExecutor(new SpectreCommand(this));
 
-        
         // Register the packet listener
         getServer().getPluginManager().registerEvents(new PlayerMovement(), this);
         
@@ -70,7 +78,9 @@ public class Spectre extends JavaPlugin {
         return getPlugin(Spectre.class);
     }
 
-
+    public SpectreManager getSpectreManager() {
+        return spectreManager;
+    }
 
     public static void sendMessage(Player destination, String message, Boolean usePrefix) {
         destination.sendMessage(

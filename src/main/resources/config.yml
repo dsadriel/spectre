@@ -39,7 +39,6 @@ messages:
     - "&e/spectre armor <visible|hidden> &7- Change armor visibility."
     - "&e/spectre version &7- Display the plugin version."
   help-admin:
-    - "&e/spectre reload &7- Reload the configuration file."
     - "&e/spectre check-updates &7- Check for updates."
 
 
@@ -51,3 +50,13 @@ enable-bStats: true
 
 # Whether or not to check for updates on startup
 check-for-updates: true
+
+defaults:
+  # Default visibility mode for players who join the server
+  mode: ghost
+  # Default armor visibility setting for players who join the server
+  armor: boots
+  # Radius in blocks for players to be visible in vanish mode
+  vanish-radius: 5
+  # Default boots type for players who are not wearing any armor
+  boots-material: GOLDEN_BOOTS

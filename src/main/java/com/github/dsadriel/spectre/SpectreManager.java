@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.plugin.Plugin;
 
 import com.github.dsadriel.spectre.enums.ArmorVisibility;
 import com.github.dsadriel.spectre.enums.SpectreMode;
@@ -20,10 +21,48 @@ public class SpectreManager {
 
     private final Map<UUID, PlayerOptions> playerOptionsMap = new HashMap<>();
     private final Map<UUID, Map<Integer, UUID>> nearbyPlayersMap = new HashMap<>();
+    private ArmorVisibility defaultArmorVisibility = ArmorVisibility.BOOTS;
+    private SpectreMode defaultMode = SpectreMode.GHOST;
+    private Double defaultRadius = 5.0;
 
-    public SpectreManager() {
+    /**
+     * Constructs a new `SpectreManager` instance with the default armor visibility, mode, and range.
+     * @param plugin
+     */
+    public SpectreManager(Plugin plugin) {
+        switch (plugin.getConfig().getString("defaults.armor").toUpperCase()) {
+            case "BOOTS":
+                defaultArmorVisibility = ArmorVisibility.BOOTS;
+                break;
+            case "HIDDEN":
+                defaultArmorVisibility = ArmorVisibility.HIDDEN;
+                break;
+            case "VISIBLE":
+                defaultArmorVisibility = ArmorVisibility.VISIBLE;
+                break;
+            default:
+                plugin.getLogger().warning("Invalid default armor visibility: " + plugin.getConfig().getString("defaults.armor"));
+                break;
+        }
+        
+        switch (plugin.getConfig().getString("defaults.mode").toUpperCase()) {
+            case "GHOST":
+                defaultMode = SpectreMode.GHOST;
+                break;
+            case "VANISH":
+                defaultMode = SpectreMode.VANISH;
+                break;
+            default:
+                plugin.getLogger().warning("Invalid default mode: " + plugin.getConfig().getString("defaults.mode"));
+                break;
+        }
+
+        defaultRadius = plugin.getConfig().getDouble("defaults.vanish-radius") > 0 ? plugin.getConfig().getDouble("defaults.vanish-radius") : 5.0;
+
     }
 
+
+    
     /**
      * Enables Spectre mode for a player.
      * 
@@ -101,7 +140,8 @@ public class SpectreManager {
      * @return the player options
      */
     public PlayerOptions getPlayerOptions(Player player) {
-        return playerOptionsMap.getOrDefault(player.getUniqueId(), new PlayerOptions(false, SpectreMode.GHOST, ArmorVisibility.BOOTS));
+        return playerOptionsMap.getOrDefault(player.getUniqueId(),
+        new PlayerOptions(false, defaultMode, defaultArmorVisibility, defaultRadius));
     }
 
     /**
@@ -140,4 +180,5 @@ public class SpectreManager {
         PlayerMoveEvent e = new PlayerMoveEvent(player, player.getLocation(), player.getLocation());
         Spectre.getInstance().getServer().getPluginManager().callEvent(e);
     }
+
 }

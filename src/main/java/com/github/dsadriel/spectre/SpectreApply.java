@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.potion.PotionEffectType;
@@ -24,6 +25,8 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTe
 
 import com.github.dsadriel.spectre.enums.ArmorVisibility;
 import com.github.dsadriel.spectre.enums.SpectreMode;
+
+import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import io.github.retrooper.packetevents.util.SpigotReflectionUtil;
 import net.kyori.adventure.text.Component;
 
@@ -34,8 +37,8 @@ import net.kyori.adventure.text.Component;
  */
 public class SpectreApply {
 
-    private static final SpectreManager spectreManager = Spectre.spectreManager;
-    private static final ItemStack DEFAULT_BOOTS = ItemStack.builder().type(ItemTypes.CHAINMAIL_BOOTS).amount(1).build();
+    private static final SpectreManager spectreManager =  Spectre.getInstance().getSpectreManager();
+    private static ItemStack DEFAULT_BOOTS = ItemStack.builder().type(ItemTypes.CHAINMAIL_BOOTS).amount(1).build();
     private static final ScoreBoardTeamInfo TEAM_INFO = new ScoreBoardTeamInfo(
             Component.empty(),
             null,
@@ -45,6 +48,23 @@ public class SpectreApply {
             null,
             WrapperPlayServerTeams.OptionData.FRIENDLY_CAN_SEE_INVISIBLE);
 
+    /** 
+     * Sets the default boots material for players.
+     * 
+     * @param material the material to set the default boots to
+     * @return true if the material is valid, false otherwise
+     */
+    public static Boolean setBootsMaterial(String material){
+        /*
+         * Note: ItemStacks.getByName() is not working as expected, so we need to use the Material enum to get the item.
+         */
+        Material item = Material.getMaterial(material.toUpperCase());
+        if(item == null){
+            return false;
+        }
+        DEFAULT_BOOTS = ItemStack.builder().type(SpigotConversionUtil.fromBukkitItemMaterial(item)).amount(1).build();
+        return true;
+    }
     /**
      * This method hides the specified players from the player.
      * The method checks the player's Spectre mode and armor visibility settings and hides the players accordingly.
@@ -179,7 +199,7 @@ public class SpectreApply {
      */
     public static void showPlayers(Player player, @Nullable List<Player> playersToShow) {
         if(playersToShow == null){
-            playersToShow = Spectre.spectreManager.getNearbyMap(player).values().stream()
+            playersToShow = spectreManager.getNearbyMap(player).values().stream()
                     .map(Bukkit::getPlayer)
                     .filter(java.util.Objects::nonNull)
                     .collect(Collectors.toList());

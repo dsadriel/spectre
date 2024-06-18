@@ -10,18 +10,20 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import com.github.dsadriel.spectre.enums.ArmorVisibility;
 import com.github.dsadriel.spectre.enums.SpectreMode;
 
 public class SpectreCommand implements CommandExecutor, TabCompleter {
 
-    private final SpectreManager spectreManager = Spectre.spectreManager;
-    private final Plugin plugin = Spectre.getInstance();
-    private final FileConfiguration config = plugin.getConfig();
+    private Spectre plugin = Spectre.getInstance();
+    private SpectreManager spectreManager;
+    private FileConfiguration config;
 
-    public SpectreCommand() {
+    public SpectreCommand(Spectre plugin) {
+        this.plugin = plugin;
+        this.spectreManager = plugin.getSpectreManager();
+        this.config = plugin.getConfig();
     }
 
     @Override
@@ -33,7 +35,7 @@ public class SpectreCommand implements CommandExecutor, TabCompleter {
 
         Player player = (Player) sender;
         if (args.length == 0) {
-            Spectre.sendMessageKey(player, "usage", true, "<enable|disable|mode|armor>");
+            Spectre.sendMessageKey(player, "usage", true, "<help|enable|disable|mode|armor>");
             return true;
         }
 
@@ -85,11 +87,17 @@ public class SpectreCommand implements CommandExecutor, TabCompleter {
                 }
                 SpectreUpdateCheck.checkForUpdates(player);
                 return true;
-            default:
+            case "help":
                 Spectre.sendMessageKeyList(player, "help", false);
                 if (player.hasPermission("spectre.admin")) {
                     Spectre.sendMessageKeyList(player, "help-admin", false);
                 }
+                return true;
+            case "info":
+                Spectre.sendMessage(player, spectreManager.getPlayerOptions(player).toString());
+                return true;
+            default:
+                Spectre.sendMessageKey(player, "usage", true, "<help|enable|disable|mode|armor>");
                 return true;
         }
     }
