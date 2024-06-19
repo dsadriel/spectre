@@ -8,43 +8,60 @@ messages:
   # Prefix for all messages sent by Spectre, set to "" to disable
   prefix: "&6[&eSpectre&6]&7 "
   # Message sent when a player does not have permission to use a command
-  no_permission: "You do not have permission to use this command." 
-   # Message sent when a command can only be used by players
-  player_only: "This command can only be used by players."
-  # Message sent when Spectre is enabled
-  enabled: "Spectre has been enabled. Use /spectre mode <mode> to change visibility." 
-  # Message sent when Spectre is disabled
-  disabled: "Spectre has been disabled. You will now see all players." 
-  # Message sent when a player changes their visibility mode
-  modes: 
-    vanish: "Spectre mode set to vanish. Players will disappear completely." 
-    ghost: "Spectre mode set to ghost. Players will appear as transparent ghosts." #
-    invisible: "Spectre mode set to invisible. Players will be invisible, but their armor may still be visible."
-  # Message sent when a player toggles armor visibility. The %s will be replaced with the new visibility setting
-  armor: "Armor visibility has been set to %s."
-  usage: "Usage: %s"
+  no-permission: "You do not have permission to use this command." 
+  # Message sent when a player enters an invalid command
+  usage: "Usage: &l%s&r&7"
+  # Message sent when a command can only be used by players
+  player-only: "This command can only be used by players."
+
+  # Command messages - these are the messages sent when a player uses a command
+  self:
+    # Message sent when Spectre is enabled
+    enabled: "Spectre has been enabled. Use /spectre mode <mode> to change visibility." 
+    # Message sent when Spectre is disabled
+    disabled: "Spectre has been disabled. You will now see all players." 
+    # Message sent when a player changes their visibility mode
+    mode: "Visibility mode has been set to &l%s&r&7."
+    # Message sent when a player toggles armor visibility. The &l%s&r&7 will be replaced with the new visibility setting
+    armor: "Armor visibility has been set to &l%s&r&7."
+    radius:
+      # Message sent when a player sets the hiding radius
+      success: "Hiding radius set to &l%s&r&7 blocks."
+      # Message sent when a player tries to set the hiding radius to an invalid value
+      invalid: "Invalid radius. Please enter a number between 1 and &l%s&r&7."
+  other:
+    not-found: "Player &l&l%s&r&7&7 not found."
+    # Message sent when a player enables Spectre for another player
+    enabled: "Spectre has been enabled for &l%s&r&7."
+    # Message sent when a player disables Spectre for another player
+    disabled: "Spectre has been disabled for &l%s&r&7."
+    # Message sent when a player changes another player's visibility mode
+    mode: "Visibility mode for &l%s&r&7 has been set to &l%s&r&7."
+    # Message sent when a player changes another player's armor visibility
+    armor: "Armor visibility for &l%s&r&7 has been set to &l%s&r&7."
+    radius:
+      # Message sent when a player sets the hiding radius for another player
+      success: "Hiding radius for &l%s&r&7 set to &l%s&r&7 blocks."
+
   reload: "Configuration file reloaded."
   version-check:
     # Message sent when the plugin is up to date
-    up-to-date: "Spectre is up to date. Current version: %s."
+    up-to-date: "Spectre is up to date. Current version: &l%s&r&7."
     # Message sent when the plugin is outdated
-    outdated: "Spectre is outdated. The latest version is %s."
+    outdated: "Spectre is outdated. The latest version is &l%s&r&7."
     # Message sent when an error occurs while checking for updates
     error: "An error occurred while checking for updates. Please try again later."
-  set-radius: 
-    # Message sent when a player sets the hiding radius
-    success: "Hiding radius set to %s blocks."
-    # Message sent when a player tries to set the hiding radius to an invalid value
-    invalid: "Invalid radius. Please enter a number between 1 and %s."
+  
   help:
     - "&6Spectre Commands:"
     - "&e/spectre &7- Main command for the Spectre plugin."
     - "&e/spectre help &7- Display this help message."
-    - "&e/spectre mode <mode> &7- Change visibility mode (vanish, ghost, invisible)."
-    - "&e/spectre armor <visible|hidden> &7- Change armor visibility."
-    - "&e/spectre version &7- Display the plugin version."
+    - "&e/spectre set mode <vanish|ghost|invisible> &7- Change visibility mode"
+    - "&e/spectre set armor <visible|hidden|boots> &7- Change armor visibility."
+    - "&e/spectre set radius <radius> &7- Set the hiding radius."
   help-admin:
-    - "&e/spectre check-updates &7- Check for updates."
+    - "&e/spectre version &7- Display the plugin version."
+    - "&e/spectre set <mode|armor|radius> <value> [player] &7- Set a value for yourself or another player."
 
 
 # Settings
