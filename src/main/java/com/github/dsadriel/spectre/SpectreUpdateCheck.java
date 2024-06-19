@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 public class SpectreUpdateCheck {
 
-    private static final String VERSION_URL = "https://api.github.com/repos/dsadriel/spectre/releases";
+    private static final String VERSION_URL = "https://api.github.com/repos/dsadriel/spectre/releases/latest";
     private static final String currentVersion = Spectre.getInstance().getDescription().getVersion();
 
     /**

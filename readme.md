@@ -8,7 +8,8 @@
 
 ## Spectre is a Minecraft plugin that allows the player to control the visibility of nearby players.
 
-Supports Paper 1.20.6
+Built for: `1.20.6`
+Tested on: 1.20, 1.19.4, 1.18.2
 
 > [!CAUTION]
 > This plugin is still in development and may contain bugs. Use at your own risk. The performance impact of this plugin when used with a large number of players is still unknown.

@@ -1,7 +1,7 @@
 name: Spectre
 main: com.github.dsadriel.spectre.Spectre
 version: ${project.version}
-api-version: 1.20
+api-version: 1.18
 description: Spectre is a Minecraft plugin that allows the player to control the visibility of nearby players.
 website: https://github.com/dsadriel/spectre
 author: dsadriel
