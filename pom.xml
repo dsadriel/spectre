@@ -7,7 +7,7 @@
 
 	<groupId>com.github.dsadriel</groupId>
 	<artifactId>spectre</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,9 +34,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.github.retrooper.packetevents</groupId>
-			<artifactId>spigot</artifactId>
-			<version>2.3.0</version>
+			<groupId>com.github.retrooper</groupId>
+			<artifactId>packetevents-spigot</artifactId>
+			<version>2.4.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

@@ -9,21 +9,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 
-import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
-
 public class Spectre extends JavaPlugin {
     private SpectreManager spectreManager;
-
-    @Override
-    public void onLoad() {
-        // Load the PacketEvents
-        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
-        PacketEvents.getAPI().getSettings().reEncodeByDefault(false)
-                .checkForUpdates(true)
-                .bStats(false);
-        PacketEvents.getAPI().load();
-
-    }
 
     @Override
     public void onEnable() {
@@ -48,7 +35,6 @@ public class Spectre extends JavaPlugin {
         
         // Initialize the PacketEvents
         PacketEvents.getAPI().getSettings()
-            .bStats(false)
             .checkForUpdates(true);
         PacketEvents.getAPI().init();
         PacketEvents.getAPI().getEventManager().registerListener(new PacketOverrides(), PacketListenerPriority.HIGH);
